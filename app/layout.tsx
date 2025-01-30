@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 import {Inter} from 'next/font/google'
 
-import './global.css'
+import './globals.css'
 
 // header
 // sidebar
