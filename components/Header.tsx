@@ -122,4 +122,20 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
             window.removeEventListener('balanceUpdate', handleBalanceUpdate as EventListener )
         }
     }, [userInfo])
+
+    const login = async ()=>{
+        if (!web3Auth) {
+            console.error('web3Auth not initialized')
+            return;
+        }
+        try {
+            const web3authProvider = await web3Auth.connect();
+            setProvider(web3authProvider)
+            setLoggedIn(true)
+            const user = await web3Auth.getUserInfo();
+            setUserInfo(user)
+        } catch (error) {
+            console.error('Error Logging In', error)
+        }
+    }
 }
