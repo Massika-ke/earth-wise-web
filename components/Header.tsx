@@ -13,7 +13,7 @@ import { Web3Auth } from "@web3auth/modal"
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
-import { getUnreadNotifications, getUserByEmail } from "@/utils/db/actions"
+import { getUnreadNotifications, getUserBalance, getUserByEmail } from "@/utils/db/actions"
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
@@ -97,5 +97,16 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
 
         const notificationInterval = setInterval(fetchNotifications, 3000)
         return ()=> clearInterval(notificationInterval)
+    })
+
+    useEffect(()=>{
+        const fetchUserBalance = async ()=>{
+            if (userInfo && userInfo.email) {
+                const user = await getUserByEmail(userInfo.email);
+                if (user) {
+                    const userBalance = getUserBalance
+                }
+            }
+        }
     })
 }
