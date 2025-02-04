@@ -9,10 +9,11 @@ import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Impor
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 import { Badge } from "./ui/badge"
-import {web3Auth} from '@web3auth/modal'
+import { Web3Auth } from "@web3auth/modal"
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
+import { getUnreadNotifications, getUserByEmail } from "@/utils/db/actions"
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
@@ -80,4 +81,21 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
         }
         init()
     }, [])
+
+    // fetch notifications from db
+    useEffect(()=>{
+        const fetchNotifications = async()=>{
+            if(userInfo && userInfo.email){
+                const user = await getUserByEmail(userInfo.email)
+                if (user) {
+                    const unreadNotifications = await getUnreadNotifications(user.id);
+                    setNotification(unreadNotifications)
+                }
+            }
+        }
+        fetchNotifications();
+
+        const notificationInterval = setInterval(fetchNotifications, 3000)
+        return ()=> clearInterval(notificationInterval)
+    })
 }
