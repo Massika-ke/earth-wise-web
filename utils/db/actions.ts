@@ -33,13 +33,17 @@ export async function getUnreadNotifications(userId:number) {
      }
 }
 
-export async function getUserBalance(userId:number):Promise<number> {
+// fetch transactions for userId
+export async function getUserBalance(userId:number): Promise<number> {
     const transactions = await getRewardTransactions(userId) || [];
 
     if (!transactions) return 0;
     const balance = transactions.reduce((acc:number, transaction:any)=>{
-        return transaction.type.startsWith('earned') ? acc + transaction.amount : acc - transaction.amount
+        return transaction.type.startsWith('earned') ? acc + transaction.amount 
+        : acc - transaction.amount
     },0)
+
+    // ensure non-negative balance
     return Math.max(balance, 0)
 }
 
@@ -52,6 +56,13 @@ export async function getRewardTransactions(userId:number) {
             description: Transactions.description,
             date: Transactions.date
         }).from(Transactions).where(eq(Transactions.userId, userId)).orderBy(desc(Transactions.date)).limit(10).execute()
+
+        const formattedTransactions = transactions.map(t=> ({
+            ...t,
+            date: t.date.toISOString().split('T')[0] //YYYY-MM-DD
+        }))
+        return formattedTransactions
+        
     } catch (error) {
         console.error('Error fetching reward transactions', error)
         return null

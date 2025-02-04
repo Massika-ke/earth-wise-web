@@ -50,6 +50,7 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
     const [userInfo, setUserInfo] = useState<any>(null)
     const pathname = usePathname()
     const [notification, setNotification] = useState<Notification[]>([])
+    const [balance, setBalance] = useState(0)
 
     // initialize web3Auth & create a user
     useEffect(()=>{
@@ -104,9 +105,21 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
             if (userInfo && userInfo.email) {
                 const user = await getUserByEmail(userInfo.email);
                 if (user) {
-                    const userBalance = getUserBalance
+                    const userBalance = getUserBalance(user.id)
+                    setBalance(userBalance)
                 }
             }
         }
-    })
+        fetchUserBalance()
+
+        const handleBalanceUpdate = (event: CustomEvent) =>{
+            setBalance(event.detail)
+        }
+
+        window.addEventListener('balanceUpdate', handleBalanceUpdate as EventListener )
+
+        return ()=>{
+            window.removeEventListener('balanceUpdate', handleBalanceUpdate as EventListener )
+        }
+    }, [userInfo])
 }
