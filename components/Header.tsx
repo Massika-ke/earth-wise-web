@@ -9,7 +9,7 @@ import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Impor
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 import { Badge } from "./ui/badge"
-import {web3Auth} from '@web3auth/modal'
+import {Web3Auth, web3Auth} from '@web3auth/modal'
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
@@ -26,3 +26,49 @@ const chainConfig{
     tickectName: 'Ethereum',
     logo: 'https://assests.web3auth.io/evm-chains/sepolia.png'
 }
+
+const privateKeyProvider = new EthereumPrivateKeyProvider({
+    config: chainConfig
+})
+
+const web3Auth = new Web3Auth({
+    web3AuthNetwork:WEB3AUTH_NETWORK.TESTNET,
+    privateKeyProvider
+})
+
+interface HeaderProps{
+    onMenuClick: () => void;
+    totalEarnings: number;
+}
+
+export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
+
+    const [provider, setProvider] = useState<IProvider | null>(null)
+    const [loggedIn, setLoggedIn] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [userInfo, setUserInfo] = useState<any>(null)
+    const pathname = usePathname()
+    const [notification, setNotification] = useState<Notification[]>([])
+}
+
+useEffect(()=>{
+    const init = async ()=>{
+        try {
+            await web3Auth.initModal();
+            setProvider(web3Auth.provider)
+
+            if (web3Auth.connected) {
+                setLoggedIn(true)
+                const user = await web3Auth.getUserInfo();
+                setUserInfo(user)
+
+                if (user.email) {
+                    localStorage.setItem('userEmail', user.email)
+                    await createUser
+                }
+            }
+        } catch (error) {
+            
+        }
+    }
+})
