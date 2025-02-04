@@ -9,7 +9,7 @@ import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Impor
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 import { Badge } from "./ui/badge"
-import {Web3Auth, web3Auth} from '@web3auth/modal'
+import {web3Auth} from '@web3auth/modal'
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
@@ -49,26 +49,35 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
     const [userInfo, setUserInfo] = useState<any>(null)
     const pathname = usePathname()
     const [notification, setNotification] = useState<Notification[]>([])
-}
 
-useEffect(()=>{
-    const init = async ()=>{
-        try {
-            await web3Auth.initModal();
-            setProvider(web3Auth.provider)
-
-            if (web3Auth.connected) {
-                setLoggedIn(true)
-                const user = await web3Auth.getUserInfo();
-                setUserInfo(user)
-
-                if (user.email) {
-                    localStorage.setItem('userEmail', user.email)
-                    await createUser
+    // initialize web3Auth & create a user
+    useEffect(()=>{
+        const init = async ()=>{
+            try {
+                await web3Auth.initModal();
+                setProvider(web3Auth.provider)
+    
+                if (web3Auth.connected) {
+                    setLoggedIn(true)
+                    const user = await web3Auth.getUserInfo();
+                    setUserInfo(user)
+    
+                    if (user.email) {
+                        localStorage.setItem('userEmail', user.email)
+    
+                        try {
+                            await createUser(user,ElementInternals, user.name || 'Anonymous user')
+                        } catch (error) {
+                            console.log('Error creating the user', error);
+                        }
+                    }
                 }
+            } catch (error) {
+                console.log('Error initializing web3auth', error);
+            } finally{
+                setLoading(false)
             }
-        } catch (error) {
-            
         }
-    }
-})
+        init()
+    }, [])
+}
