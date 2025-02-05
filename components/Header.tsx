@@ -13,7 +13,7 @@ import { Web3Auth } from "@web3auth/modal"
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
-import { createUser, getUnreadNotifications, getUserBalance, getUserByEmail } from "@/utils/db/actions"
+import { createUser, getUnreadNotifications, getUserBalance, getUserByEmail, markNotificationAsRead } from "@/utils/db/actions"
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
@@ -177,6 +177,10 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                 }
             }
         }
+    }
+
+    const handleNotificationClick = async (notificationId: number)=>{
+        await markNotificationAsRead(notificationId);
     }
 }
 
