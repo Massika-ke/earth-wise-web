@@ -13,7 +13,7 @@ import { Web3Auth } from "@web3auth/modal"
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
-import { getUnreadNotifications, getUserBalance, getUserByEmail } from "@/utils/db/actions"
+import { createUser, getUnreadNotifications, getUserBalance, getUserByEmail } from "@/utils/db/actions"
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
@@ -134,8 +134,49 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
             setLoggedIn(true)
             const user = await web3Auth.getUserInfo();
             setUserInfo(user)
+            if (user.email) {
+                localStorage.setItem('userEmail', user.email)
+                try {
+                    await createUser(user.email, user.name || 'Anonymous User')
+                } catch (error) {
+                    console.error('Error creating user', error)
+                }
+            }
         } catch (error) {
             console.error('Error Logging In', error)
         }
     }
+
+    const logout = async ()=>{
+        if (!web3Auth) {
+            console.log('web3Auth not initialized')
+            return;
+        }
+        try {
+            await web3Auth.logout();
+            setProvider(null);
+            setLoggedIn(false)
+            setUserInfo(null);
+            localStorage.removeItem("userEmail")
+        } catch (error) {
+            console.error("Error logging out", error)
+        }
+    }
+
+    const getUserInfo = async()=>{
+        if (web3Auth.connected) {
+            const user = await web3Auth.getUserInfo();
+            setUserInfo(user);
+
+            if (user.email) {
+                localStorage.setItem("userEmail", user.email);
+                try {
+                    await createUser(user.email, user.name || 'Anonymous User')
+                } catch (error) {
+                    console.error("Error creating user", error)
+                }
+            }
+        }
+    }
 }
+
