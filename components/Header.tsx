@@ -17,7 +17,7 @@ import { createUser, getUnreadNotifications, getUserBalance, getUserByEmail, mar
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
-const chainConfig{
+const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: '0xaa36a7',
     rpcTarget: 'https://rpc.ankr.com/eth_sepolia',
@@ -29,10 +29,11 @@ const chainConfig{
 }
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
-    config: chainConfig
+    config: {chainConfig},
 })
 
 const web3Auth = new Web3Auth({
+    clientId,
     web3AuthNetwork:WEB3AUTH_NETWORK.TESTNET,
     privateKeyProvider
 })
@@ -196,8 +197,14 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                     className="mr-2 md:mr-4"
                     onClick={onMenuClick}
                     >
-                        <Menu className="h-6 w-6" />
+                        <Menu className="h-6 w-6 text-gray-800" />
                     </Button>
+                    <Link href="/" className="flex items-center">
+                    <Leaf className="h-6 w-6 md:h-8 md:w-8 text-green-500 mr-1 md:mr-2" />
+                    <span className="font-bold text-base md:text-lg text-gray-800">
+                        Earthwise
+                    </span>
+                    </Link>
                 </div>
             </div>
         </header>
