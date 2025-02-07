@@ -6,14 +6,26 @@ import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
 import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Import} from 'lucide-react'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuItem, 
+    DropdownMenuTrigger 
+} from "./ui/dropdown-menu"
 
 import { Badge } from "./ui/badge"
 import { Web3Auth } from "@web3auth/modal"
 
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import {EthereumPrivateKeyProvider} from '@web3auth/ethereum-provider'
-import { createUser, getUnreadNotifications, getUserBalance, getUserByEmail, markNotificationAsRead } from "@/utils/db/actions"
+import { 
+    createUser, 
+    getUnreadNotifications, 
+    getUserBalance, 
+    getUserByEmail, 
+    markNotificationAsRead 
+} from "@/utils/db/actions"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
@@ -52,6 +64,7 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
     const pathname = usePathname()
     const [notification, setNotification] = useState<Notification[]>([])
     const [balance, setBalance] = useState(0)
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     // initialize web3Auth & create a user
     useEffect(()=>{
@@ -206,6 +219,13 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                     </span>
                     </Link>
                 </div>
+                {!isMobile && (
+                    <div className="flex-1 max-w-xl mx-4">
+                        <div className="relative">
+                            <input type="text" placeholder="search..." className="" />
+                        </div>
+                    </div>
+                )}
             </div>
         </header>
     )
