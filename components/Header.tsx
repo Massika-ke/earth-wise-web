@@ -4,7 +4,18 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
-import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Import, Ghost} from 'lucide-react'
+import {
+    Menu, 
+    Coins, 
+    Leaf, 
+    Search, 
+    Bell, 
+    User, 
+    ChevronDown, 
+    LogIn, 
+    LogOut, 
+    Import, 
+    Ghost} from 'lucide-react'
 
 import { 
     DropdownMenu, 
@@ -252,14 +263,33 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                                     <DropdownMenuItem 
                                     key={notification.id}
                                     onClick={()=> handleNotificationClick(notification.id)}>
-
+                                        <div className="flex flex-col">
+                                            <span className="font-medium">{notification.type}</span>
+                                            <span className="text-sm text-gray-500">{notification.message}</span>
+                                        </div>
                                     </DropdownMenuItem>
                                 ))
                             ):(
-                                <></>
+                                <DropdownMenuItem>No new notifications</DropdownMenuItem>
                             )}
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <div className="mr-2 md:mr-4 flex items-center bg-gray-100 rounded-full px-2 md:px-3 py-1">
+                      <Coins className="h-4 w-4 md:h-5 md:w-5 mr-1 text-green-500"/>
+                      <span className="font-semibold text-sm md:text-base text-gray-800">
+                        {balance.toFixed(2)}
+                        </span>  
+                    </div>
+                    {!loggedIn ? (
+                        <Button onClick={login} className="bg-green-600 hover:bg-green-700 text-white text-sm md:text-base">
+                            Login
+                            <LogIn className="ml-1 md:ml-2 h-4 w-4 md:h-5 md:w-5"/>
+                        </Button>
+                    ):(
+                        <DropdownMenu>
+                            
+                        </DropdownMenu>
+                    )}
                 </div>
             </div>
         </header>
