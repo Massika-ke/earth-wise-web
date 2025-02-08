@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
-import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Import} from 'lucide-react'
+import {Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut, Import, Ghost} from 'lucide-react'
 
 import { 
     DropdownMenu, 
@@ -228,6 +228,39 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                         </div>
                     </div>
                 )}
+                <div className="flex items-center">
+                    {isMobile && (
+                        <Button variant="ghost" size="icon" className="mr-2">
+                            <Search className="h-5 w-5"/>
+                        </Button>
+                    )}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="mr-2 relative">
+                                <Bell className="h-5 w-5 text-gray-800"/>
+                                {notification.length > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 px-1 min-w-[1.2rem] h-5">
+                                        {notification.length}
+                                    </Badge>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end" className="w-64">
+                            {notification.length > 0 ? (
+                                notification.map((notification:any)=>(
+                                    <DropdownMenuItem 
+                                    key={notification.id}
+                                    onClick={()=> handleNotificationClick(notification.id)}>
+
+                                    </DropdownMenuItem>
+                                ))
+                            ):(
+                                <></>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </div>
         </header>
     )
