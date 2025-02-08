@@ -287,7 +287,24 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                         </Button>
                     ):(
                         <DropdownMenu>
-                            
+                            <DropdownMenuTrigger>
+                                <Button
+                                variant="ghost"
+                                size="icon"
+                                className="flex items-center"
+                                >
+                                    <User className="h-5 w5 mr-1"/>
+                                    <ChevronDown className="h-4 w-4"/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={getUserInfo}>
+                                    {userInfo ? userInfo.name : 'Profile'}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link href={"/settings"}>Profile</Link>
+                                </DropdownMenuItem>  
+                            </DropdownMenuContent>
                         </DropdownMenu>
                     )}
                 </div>
