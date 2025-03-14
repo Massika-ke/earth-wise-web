@@ -304,6 +304,8 @@ export default function Header({ onMenuClick, totalEarnings}: HeaderProps){
                                 <DropdownMenuItem>
                                     <Link href={"/settings"}>Profile</Link>
                                 </DropdownMenuItem>  
+                                <DropdownMenuItem onClick={logout}>Sign Out
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     )}
